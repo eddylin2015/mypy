@@ -1,5 +1,11 @@
 # mypy
 
+ex_main.py
+結構化程式
+<br>
+ex_obj.py
+物件導向程式
+
 <pre>
 wg_config.py
 def WG_Username():
