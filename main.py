@@ -4,6 +4,7 @@
 # import modules used here -- sys is a very standard one
 import sys
 import wg_utils
+import wg_config
 import http.client
 import urllib
 import ssl
@@ -12,9 +13,9 @@ import time
 # Gather our code in a main() function
 def main():
     print(sys.argv)
-    host="127.0.0.1"
+    host=wg_config.Auth_Login_Host()
     path="/auth/login"
-    params = urllib.parse.urlencode({'@u': 12524, '@p': 'issue', '@action': 'show'})
+    params = urllib.parse.urlencode({'username': wg_config.WG_Username(), 'password': wg_config.WG_Password(), 'from_page': '/'})
     session_id=wg_utils.Auth_Login(host,path,params)
     link_paths = [
   '/',
@@ -25,8 +26,8 @@ def main():
   '/log/log_devices?_search=false&rows=10000&page=1&sidx=name&sord=asc',
   '/log/log_grid_columns?l_t=servers',
     ];
-    for link_ in link_paths:
-        wg_utils.HttpGet(host,link_, session_id)
+    for link_ in link_paths :
+        wg_utils.HttpGet(host, link_, session_id)
         time.sleep(3)
 # Standard boilerplate to call the main() function to begin
 # the program.
