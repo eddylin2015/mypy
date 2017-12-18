@@ -15,3 +15,15 @@ def WG_Password():
 def Auth_Login_Host():
 	return '127.0.0.1'	
 </pre>
+
+<pre>
+wg_config.js
+'use strict'
+exports.WG_Username = '';
+exports.WG_Password = '';
+exports.Auth_Login_Host = '';
+exports.Auth_Login_Path_ = '/'
+exports.repos_data_host = "";
+exports.repos_data_path = "post.php";
+exports.user_pwd = '';
+</pre>
