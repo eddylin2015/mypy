@@ -40,10 +40,7 @@ app.GetWGLog = function () {
     var path_ = link_paths[index_];
     index_++;
     console.log(index_, path_);
-fs.appendFile(filename,"\n\n"+path_+"\n\n", (err) => {
-  if (err) throw err;
-  console.log('The "data to append" was appended to file!');
-});
+fs.appendFile(filename,"\n\nhttps://www.macaodaily.com"+path_+"\n\n", (err) => {  if (err) throw err;  });
         wg_utils.NewsNodeContentGet("www.macaodaily.com", path_,filename);
 	
 	
