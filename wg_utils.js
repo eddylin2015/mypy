@@ -143,10 +143,14 @@ var pageLinka = html.match(/<a id=pageLink href=([\w|\W|\s|\S]*?)<\/a>/g);
 if(pageLinka){
 for(var i=0 ;i<pageLinka.length;i++)
 {
+	if(pageLinka[i].indexOf('廣告')>0 || pageLinka[i].indexOf('狗')>0 || pageLinka[i].indexOf('旅')>0){}
+	else{
+	console.log(pageLinka[i]);
 	var url=pageLinka[i].replace("<a id=pageLink href=", '');
 	url=url.replace(/>([\w|\W|\s|\S]*?)<\/a>/gi, '');	
 	
 	link_paths.push(date_+url);
+	}
 }
 }
                  
@@ -176,11 +180,7 @@ var pageLinka = html.match(/<a href=content_([\w|\W|\s|\S]*?)<\/a>/g);
 if(pageLinka){
 for(var i=1 ;i<pageLinka.length;i++)
 {
-
-fs.appendFile(filename,html2txt(pageLinka[i]), (err) => {
-  if (err) throw err;
-  console.log('The "data to append" was appended to file!');
-});
+fs.appendFile(filename,html2txt(pageLinka[i]), (err) => { if (err) throw err; });
 }
 }
                  
@@ -206,10 +206,7 @@ fs.appendFile(filename,html2txt(pageLinka[i]), (err) => {
                     // process.stdout.write(d);
 					var html=d.toString();
 
-fs.appendFile(filename,html2txt(html), (err) => {
-  if (err) throw err;
-  console.log('The "data to append" was appended to file!');
-});
+fs.appendFile(filename,html2txt(html),  (err) => { if (err) throw err; });
                        
                  
                 });
@@ -218,6 +215,4 @@ fs.appendFile(filename,html2txt(html), (err) => {
             });
     }
 }
-
-
 
