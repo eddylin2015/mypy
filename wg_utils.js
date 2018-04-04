@@ -1,6 +1,24 @@
 const https = require('https');
 const http = require('http');
 const querystring = require('querystring');
+const fs = require('fs');
+function html2txt(html)
+{
+	html = html.replace(/<!--([\w|\W|\s|\S]*?)-->/gi, '');					
+			
+html = html.replace(/<style([\s\S]*?)<\/style>/gi, '');
+html = html.replace(/<script([\s\S]*?)<\/script>/gi, '');
+html = html.replace(/<\/div>/ig, '\n');
+html = html.replace(/<\/li>/ig, '\n');
+html = html.replace(/<li>/ig, '  *  ');
+html = html.replace(/<\/ul>/ig, '\n');
+html = html.replace(/<\/p>/ig, '\n');
+html = html.replace(/<br\s*[\/]?>/gi, "\n");
+html = html.replace(/<[^>]+>/ig, '');
+html = html.replace(/&nbsp;/ig, ' ');
+html = html.replace(/<!--([\w|\W|\s|\S]*?)-->/gi, '');	
+	return html;
+}
 module.exports = class WG_STAT {
     constructor(repos_data_host_, repos_data_path_) {
         this.repos_data_host = repos_data_host_;
@@ -103,5 +121,103 @@ module.exports = class WG_STAT {
                 console.log(e);
             });
     }
+	
+    NewsNodeGet(host_, path_,link_paths,date_) {
+        console.log("HttpGet", path_, this.session_id);
+        http.get(
+            {
+                hostname: host_,
+                port: 80,
+                path: path_,
+                method: 'GET',
+                headers: { 'Cookie': this.session_id }
+            },
+            (res) => {
+               // console.log('statusCode:', res.statusCode);
+                //console.log('headers:', res.headers);
+                res.on('data', (d) => {
+                    // process.stdout.write(d);
+					var html=d.toString();
+var pageLinka = html.match(/<a id=pageLink href=([\w|\W|\s|\S]*?)<\/a>/g);
+
+if(pageLinka){
+for(var i=0 ;i<pageLinka.length;i++)
+{
+	var url=pageLinka[i].replace("<a id=pageLink href=", '');
+	url=url.replace(/>([\w|\W|\s|\S]*?)<\/a>/gi, '');	
+	
+	link_paths.push(date_+url);
 }
+}
+                 
+                });
+            }).on('error', (e) => {
+                console.log(e);
+            });
+    }	
+	 NewsNodeContentGet(host_, path_,filename) {
+        //console.log("HttpGet", path_, this.session_id);
+        http.get(
+            {
+                hostname: host_,
+                port: 80,
+                path: path_,
+                method: 'GET',
+                headers: { 'Cookie': this.session_id }
+            },
+            (res) => {
+               // console.log('statusCode:', res.statusCode);
+                //console.log('headers:', res.headers);
+                res.on('data', (d) => {
+                    // process.stdout.write(d);
+					 var html=d.toString();
+var pageLinka = html.match(/<a href=content_([\w|\W|\s|\S]*?)<\/a>/g);
+
+if(pageLinka){
+for(var i=1 ;i<pageLinka.length;i++)
+{
+
+fs.appendFile(filename,html2txt(pageLinka[i]), (err) => {
+  if (err) throw err;
+  console.log('The "data to append" was appended to file!');
+});
+}
+}
+                 
+                });
+            }).on('error', (e) => {
+                console.log(e);
+            });
+    }	
+	NewsGet(host_, path_,filename) {
+        console.log("HttpGet", path_, this.session_id);
+        http.get(
+            {
+                hostname: host_,
+                port: 80,
+                path: path_,
+                method: 'GET',
+                headers: { 'Cookie': this.session_id }
+            },
+            (res) => {
+               // console.log('statusCode:', res.statusCode);
+                //console.log('headers:', res.headers);
+                res.on('data', (d) => {
+                    // process.stdout.write(d);
+					var html=d.toString();
+
+fs.appendFile(filename,html2txt(html), (err) => {
+  if (err) throw err;
+  console.log('The "data to append" was appended to file!');
+});
+                       
+                 
+                });
+            }).on('error', (e) => {
+                console.log(e);
+            });
+    }
+}
+
+
 
